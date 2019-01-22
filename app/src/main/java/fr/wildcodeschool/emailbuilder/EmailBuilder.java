@@ -13,12 +13,12 @@ public class EmailBuilder {
    * Email validation pattern.
    */
   private static final Pattern EMAIL_PATTERN = Pattern.compile(
-    "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{0,256}" +
+    "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
       "\\@" +
-      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+      "[a-zA-Z0-9][a-zA-Z0-9\\-]{1,64}" +
       "(" +
       "\\." +
-      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+      "[a-zA-Z0-9][a-zA-Z0-9\\-]{1,25}" +
       ")+"
   );
 
@@ -29,7 +29,32 @@ public class EmailBuilder {
    * @return The build email address
    */
   public String getEmail() {
-    return mUserName + '@' + mDomain + '.' + mSubDomain + '.' + mTld;
+    StringBuilder sb = new StringBuilder();
+
+    if(isNotNullOrEmpty(mUserName))
+      sb.append(mUserName);
+
+    if(isNotNullOrEmpty(mDomain) || isNotNullOrEmpty(mSubDomain))
+      sb.append("@");
+
+    if(isNotNullOrEmpty(mDomain))
+      sb.append(mDomain);
+
+
+    if(isNotNullOrEmpty(mDomain) && isNotNullOrEmpty(mSubDomain))
+      sb.append(".");
+
+    if (isNotNullOrEmpty(mSubDomain))
+      sb.append(mSubDomain);
+
+    if(isNotNullOrEmpty(mTld))
+      sb.append(".").append(mTld);
+
+    return sb.toString();
+  }
+
+  private boolean isNotNullOrEmpty(String part){
+    return  !(null == part || part.isEmpty());
   }
 
   /**
